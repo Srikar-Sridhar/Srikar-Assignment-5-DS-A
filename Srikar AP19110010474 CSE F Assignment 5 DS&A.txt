@@ -1,0 +1,424 @@
+Q.1)Write a c program insertion and deletion of Binary Search Tree
+Ans)
+//Insertion and Deletion in Binary Search Tree
+//Beinging of the program
+#include <stdio.h>
+#include <stdlib.h>
+struct treeNode {
+        int data;
+        struct treeNode *left, *right;
+  };
+struct treeNode *root = NULL;
+struct treeNode* createNode(int data) 
+{
+        struct treeNode *newNode;
+        newNode = (struct treeNode *) malloc(sizeof (struct treeNode));
+        newNode->data = data;
+        newNode->left = NULL;
+        newNode->right = NULL;
+        return(newNode);
+}
+//Beinging of insertion of program
+void insertion(struct treeNode **node, int data) {
+        if (*node == NULL) 
+        {
+           *node = createNode(data);
+        } else if (data < (*node)->data) 
+        {
+                insertion(&(*node)->left, data);
+        } else if (data > (*node)->data) 
+        {
+                insertion(&(*node)->right, data);
+        }
+}
+//End of insertion of program
+//Beinging of deletion of program
+void deletion(struct treeNode **node, struct treeNode **parent, int data) 
+{
+       struct treeNode *tmpNode, *tmpParent;
+        if (*node == NULL)
+                return;
+        if ((*node)->data == data) 
+        {
+            if (!(*node)->left && !(*node)->right) 
+            {
+                        if (parent) 
+                        {
+                                
+                                if ((*parent)->left == *node)
+                                        (*parent)->left = NULL;
+                                else
+                                        (*parent)->right = NULL;
+                                free(*node);
+                        } else 
+                        {
+                               
+                            free(*node);
+                        }
+                
+            } else if (!(*node)->right && (*node)->left) {
+                        tmpNode = *node;
+                        (*parent)->right = (*node)->left;
+                        free(tmpNode);
+                        *node = (*parent)->right;
+                } else if ((*node)->right && !(*node)->left) {
+                        tmpNode = *node;
+                        (*parent)->left = (*node)->right;
+                        free(tmpNode);
+                        (*node) = (*parent)->left;
+                } else if (!(*node)->right->left) {
+                        tmpNode = *node;
+                        (*node)->right->left = (*node)->left;
+                        (*parent)->left = (*node)->right;
+                        free(tmpNode);
+                        *node = (*parent)->left;
+                } else {
+                    tmpNode = (*node)->right;
+                        while (tmpNode->left) {
+                                tmpParent = tmpNode;
+                                tmpNode = tmpNode->left;
+                        }
+                        tmpParent->left = tmpNode->right;
+                        tmpNode->left = (*node)->left;
+                        tmpNode->right =(*node)->right;
+                        free(*node);
+                        *node = tmpNode;
+                }
+        } else if (data < (*node)->data) {
+                deletion(&(*node)->left, node, data);
+        } else if (data > (*node)->data) {
+               deletion(&(*node)->right, node, data);
+        }
+}
+//End of deletion program
+//Beinging of traverse program
+void traverse(struct treeNode *node) {
+        if (node != NULL) {
+                traverse(node->left);
+                printf("%3d", node->data);
+                traverse(node->right);
+        }
+        return;
+  }
+//End of traverse of program
+//Beinging of main program
+int main() {
+        int data, ch;
+        while (1) {
+                printf("1. Insertion in Binary Search Tree\n");
+                printf("2. Deletion in Binary Search Tree\n");
+                printf("3. Inorder traversal\n4. Exit\n");
+                printf("Enter your choice:");
+                scanf("%d", &ch);
+                switch (ch) {
+                        case 1:
+                                while (1) {
+                                printf("Enter your data:");
+                                scanf("%d", &data);
+                                insertion(&root, data);
+                                printf("Continue Insertion(0/1):");
+                                scanf("%d", &ch);
+                                if (!ch)
+                                        break;
+                                }
+                                break;
+                        case 2:
+                                printf("Enter your data:");
+                                scanf("%d", &data);
+                                deletion(&root, NULL, data);
+                                break;
+                        case 3:
+                                printf("Inorder Traversal:\n");
+                                traverse(root);
+                                printf("\n");
+                                break;
+                        case 4:
+                                exit(0);
+                        default:
+                                printf("You have entered wrong option\n");
+                                break;
+                }
+        }
+        return 0;
+
+  }
+//End of main program
+//End of the total program
+
+
+
+
+Q.2)Write a c program to impelement queue using two stacks
+Ans)
+//Implementation of queue using two stacks
+#include<stdio.h>
+#include<stdlib.h>
+void push1();
+void push2();
+int pop1();
+int pop2();
+void enqueue();
+void dequeue();
+void display();
+void create();
+int stack1[1000], stack2[1000];
+int top1=-1, top2=-2;
+int count=0;
+//Beigning of enqueue
+void enqueue(){
+    int data,i;
+    printf("Enter the data: \t");
+    scanf("%d", &data);
+    push1(data);//To push the data from the stack to the std::queue
+    count++;
+}
+//End of enqueue
+//Beigningn of dequeue
+void dequeue(){
+    int j;
+    for (j=0;j<=count;j++){
+        push2(pop1());
+    }
+    pop2();
+    count--;
+    for (j=0;j<=count;j++){
+        push1(pop2());
+    }
+}
+//End of dequeue
+//Beigning of display program
+void display()
+{
+    int j;
+    if(top1==-1){
+        printf("\nEmpty queue");
+    }
+    else {
+        printf("\nQueue Elements:");
+        for (j=0;j<=top1;j++){
+            printf("%d",stack1[j]);
+        }
+        printf("\n");
+    }
+}
+//End of display program
+//Beigning of program to create the stavk
+void create() {
+    top1=top2=-1;
+}
+void push1(int element){
+    stack1[top1++]=element;
+}
+int pop1() {
+    return(stack1[top1--]);
+}
+void push2(int element){
+    stack2[top2++]=element;
+}
+int pop2(){
+    return(stack2[top2--]);
+}
+//End of creating program
+//Beigning of main program
+void main(){
+    int choice;
+    printf("\nQueu using stacks implementation");
+    printf("\n1.Enqueue");
+    printf("\n2.Dequeue");
+    printf("\n3.Display");
+    printf("\n4.Exit");
+    printf("\n");
+    create ();
+    while(1){
+        printf("\nEnter your choice: ");
+        scanf("%d",&choice);
+        switch(choice) {
+            case 1:
+            enqueue();
+            break;
+            case 2:
+            dequeue();
+            break;
+            case 3:
+            display();
+            break;
+            case 4:
+            exit(0);
+            default:
+            printf("\nInvalid choice");
+        }
+    }
+}
+//End of main program
+//End of total program
+
+
+
+
+Q.3)Write a c program for infix to postfix conversion using stack
+Ans)
+//Conversion of infix into postfix by using stack
+#include<stdio.h>
+#include<string.h>
+char stack[50];
+int top=-1;
+void post(char infix[]);
+void push(char);
+char pop();
+
+void main()
+{
+char infix[25];
+printf("\nEnter the infix expression = ");
+gets(infix);
+post(infix);
+}
+//Beign of push
+void push(char symb)
+{
+if(top>=49)
+{
+printf("\noverflow of stack");
+return;
+}
+else
+{
+top=top+1;
+stack[top]=symb;
+}
+}
+//End of push program
+//Beign of pop program
+char pop()
+{
+char item;
+if(top==-1)
+{
+printf("\nstack is empty");
+return(0);
+}
+else
+{
+item=stack[top];
+top--;
+}
+return(item);
+}
+int preced(char ch)
+{
+if(ch==47)
+{
+return(5);
+}
+else if(ch==42)
+{
+return(4);
+}
+else if(ch==43)
+{
+return(3);
+}
+else
+return(2);
+}
+//End of pop
+//Beign of postfix
+void post(char infix[])
+{
+int l;
+int index=0,pos=0;
+char symbol,temp;
+char postfix[40];
+l=strlen(infix);
+push('#');
+while(index<l)
+{
+symbol=infix[index];
+switch(symbol)
+{
+case '(': push(symbol);
+break;
+case ')': temp=pop();
+while(temp!='(')
+{
+postfix[pos]=temp;
+pos++;
+temp=pop();
+}
+break;
+case '+':
+case '-':
+case '*'://symbols for precedence
+case '/':
+case '^':
+while(preced(stack[top])>=preced(symbol))
+{
+temp=pop();
+postfix[pos]=temp;
+pos++;
+}
+push(symbol);
+break;
+default: postfix[pos++]=symbol;
+break;
+}
+index++;
+}
+while(top>0)
+{
+temp=pop();
+postfix[pos++]=temp;
+}
+postfix[pos++]='\0';
+puts(postfix);
+return;
+}
+//End of postfix program
+//End of total program
+
+
+Q.4)Write a c program to reverse the string using stack
+Ans)
+#include<stdio.h>
+#include<string.h>
+
+//define maximum up to 20
+#define MAX 20
+
+int top = -1;
+char stack[MAX];
+
+/Begin of push/
+char push(char item)
+{
+if(top == (MAX-1))
+printf("Stack Overflow\n");
+else
+stack[++top] =item;
+}
+/End of push/
+/Begin of pop/
+char pop()
+{
+if(top == -1)
+printf("Stack Underflow\n");
+else
+return stack[top--];
+}
+/End of pop/
+/Begin of main/
+void main()
+{
+char str[20];
+int i;
+printf("Enter the string : " );
+gets(str);
+for(i=0;i<strlen(str);i++)
+push(str[i]);
+for(i=0;i<strlen(str);i++)
+str[i]=pop();
+printf("Reversed string is : ");
+puts(str);
+}
+/End of main/
+/End of total program/
